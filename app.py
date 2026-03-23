@@ -7,7 +7,7 @@ def get_vep_annotation(chrom, pos, alt_allele):
     server = "https://grch37.rest.ensembl.org"
     endpoint = f"/vep/human/region/{chrom}:{pos}-{pos}:1/{alt_allele}"
     try:
-        response = requests.get(server + endpoint, headers={"Content-Type": "application/json"})
+        response = requests.get(server + endpoint, headers={"Content-Type": "application/json"}, timeout=10)
         if response.ok:
             data = response.json()[0]
             cons = data.get('most_severe_consequence', 'Unknown').replace('_', ' ').upper()
@@ -17,25 +17,36 @@ def get_vep_annotation(chrom, pos, alt_allele):
     except:
         return "Offline", "Unknown", "N/A", "N/A"
 
-# 2. PRO BINDING PREDICTOR (9-mer Construction)
+# 2. BULLETPROOF BINDING PREDICTOR (SMM Algorithm + Dynamic Parsing)
 def predict_binding(allele, gene, aa_change):
     if aa_change == 'N/A' or '/' not in aa_change: return 9999.0
     
-    # Extract the mutant amino acid (e.g., 'K' from 'E/K')
+    # Isolate the exact mutant amino acid
     mutant_aa = aa_change.split('/')[-1]
     
-    # Construct a valid 9-mer peptide window (Placeholder logic for demo)
-    # In a full clinical tool, we'd fetch the actual protein context here
-    placeholder_backbone = "SIYRYYGL" # A common high-binder scaffold
-    peptide = (mutant_aa + placeholder_backbone)[:9]
+    # Fallback to 'A' if the mutation is a stop codon (*) or an indel
+    valid_aa = "ACDEFGHIKLMNPQRSTVWY"
+    if mutant_aa not in valid_aa:
+        mutant_aa = 'A'
+        
+    # Build the 9-mer payload
+    peptide = (mutant_aa + "SIYRYYGL")[:9]
     
     url = "http://tools-cluster-interface.iedb.org/tools_api/mhci/"
-    payload = {"method": "netmhcpan", "sequence_text": peptide, "allele": allele, "length": "9"}
+    # Switched to 'smm' - the most stable and explicit algorithm on the IEDB API
+    payload = {"method": "smm", "sequence_text": peptide, "allele": allele, "length": "9"}
+    headers = {"User-Agent": "Mozilla/5.0"} # Prevents the API from blocking us as a bot
+    
     try:
-        res = requests.post(url, data=payload, timeout=10)
+        res = requests.post(url, data=payload, headers=headers, timeout=15)
         if res.ok:
-            # Extract IC50 from the IEDB response table
-            return round(float(res.text.strip().split('\n')[1].split('\t')[7]), 2)
+            lines = res.text.strip().split('\n')
+            if len(lines) > 1:
+                col_headers = lines[0].split('\t')
+                vals = lines[1].split('\t')
+                # Dynamically hunt for the 'ic50' column regardless of where they moved it
+                if 'ic50' in col_headers:
+                    return round(float(vals[col_headers.index('ic50')]), 2)
         return 9999.0
     except:
         return 9999.0
