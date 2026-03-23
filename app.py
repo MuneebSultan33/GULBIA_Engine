@@ -2,9 +2,10 @@ import streamlit as st
 import pandas as pd
 import requests
 
-# 1. ENSEMBL VEP CORE
+# 1. ENSEMBL VEP CORE (GRCh37 Legacy Build for TCGA Data)
 def get_vep_annotation(chrom, pos, alt_allele):
-    server = "https://rest.ensembl.org"
+    # FIXED: Pointing to the older GRCh37 server to match 2018 clinical data
+    server = "https://grch37.rest.ensembl.org"
     endpoint = f"/vep/human/region/{chrom}:{pos}-{pos}:1/{alt_allele}"
     try:
         response = requests.get(server + endpoint, headers={"Content-Type": "application/json"})
@@ -63,7 +64,6 @@ if vcf_file:
         progress = st.progress(0, "Analyzing Clinical Targets...")
         total_variants = len(variants)
         
-        # FIXED PROGRESS BAR LOGIC (Immune to row index skips)
         for count, (i, row) in enumerate(variants.iterrows()):
             progress.progress((count + 1) / total_variants)
             
