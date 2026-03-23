@@ -17,12 +17,11 @@ def get_vep_annotation(chrom, pos, alt_allele):
     except:
         return "Offline", "Unknown", "N/A", "N/A"
 
-# 2. BULLETPROOF BINDING PREDICTOR (Fixes the "Number in Gene" crash)
+# 2. BULLETPROOF BINDING PREDICTOR
 def predict_binding(allele, gene, change):
     if change == 'N/A' or not change: return 9999.0
     mut_aa = change.split('/')[-1] if '/' in change else 'A'
     
-    # STRIP JUNK: Only allow actual amino acid letters into the payload
     valid_aa = "ACDEFGHIKLMNPQRSTVWY"
     clean_gene = "".join([c for c in gene.upper() if c in valid_aa])
     peptide = (f"{clean_gene}{mut_aa}YLQCGE"[:9]).ljust(9, 'A')
@@ -49,7 +48,7 @@ if vcf_file:
     is_maf = vcf_file.name.endswith(".maf")
     df_raw = pd.read_csv(vcf_file, sep="\t", comment="#", low_memory=False)
     
-    # STRICT BIOLOGY FILTER: Rip out the introns and junk DNA
+    # STRICT BIOLOGY FILTER
     if is_maf and 'Variant_Classification' in df_raw.columns:
         df_clean = df_raw[df_raw['Variant_Classification'] == 'Missense_Mutation']
     else:
@@ -62,8 +61,12 @@ if vcf_file:
         st.warning("No protein-altering Missense mutations found in the top rows.")
     else:
         progress = st.progress(0, "Analyzing Clinical Targets...")
-        for i, row in variants.iterrows():
-            progress.progress((i+1)/5)
+        total_variants = len(variants)
+        
+        # FIXED PROGRESS BAR LOGIC (Immune to row index skips)
+        for count, (i, row) in enumerate(variants.iterrows()):
+            progress.progress((count + 1) / total_variants)
+            
             if is_maf:
                 chrom = str(row.get('Chromosome', ''))
                 pos = str(row.get('Start_Position', ''))
