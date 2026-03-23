@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 
-# 1. ENSEMBL VEP CORE (Unified for VCF & MAF)
+# 1. ENSEMBL VEP CORE
 def get_vep_annotation(chrom, pos, alt_allele):
     server = "https://rest.ensembl.org"
     endpoint = f"/vep/human/region/{chrom}:{pos}-{pos}:1/{alt_allele}"
@@ -17,16 +17,23 @@ def get_vep_annotation(chrom, pos, alt_allele):
     except:
         return "Offline", "Unknown", "N/A", "N/A"
 
-# 2. BINDING PREDICTOR (IEDB API)
+# 2. BULLETPROOF BINDING PREDICTOR (Fixes the "Number in Gene" crash)
 def predict_binding(allele, gene, change):
     if change == 'N/A' or not change: return 9999.0
     mut_aa = change.split('/')[-1] if '/' in change else 'A'
-    peptide = (f"{gene}{mut_aa}YLQCGE"[:9]).ljust(9, 'A')
+    
+    # STRIP JUNK: Only allow actual amino acid letters into the payload
+    valid_aa = "ACDEFGHIKLMNPQRSTVWY"
+    clean_gene = "".join([c for c in gene.upper() if c in valid_aa])
+    peptide = (f"{clean_gene}{mut_aa}YLQCGE"[:9]).ljust(9, 'A')
+    
     url = "http://tools-cluster-interface.iedb.org/tools_api/mhci/"
     payload = {"method": "netmhcpan", "sequence_text": peptide, "allele": allele, "length": "9"}
     try:
         res = requests.post(url, data=payload, timeout=10)
-        return round(float(res.text.strip().split('\n')[1].split('\t')[7]), 2) if res.ok else 9999.0
+        if res.ok:
+            return round(float(res.text.strip().split('\n')[1].split('\t')[7]), 2)
+        return 9999.0
     except:
         return 9999.0
 
@@ -39,27 +46,24 @@ vcf_file = st.file_uploader("Upload Patient Data (VCF or MAF)", type=["vcf", "ma
 hla = st.selectbox("HLA-Allele", ["HLA-A*02:01", "HLA-A*24:02", "HLA-B*07:02"])
 
 if vcf_file:
-    # Detect File Type
     is_maf = vcf_file.name.endswith(".maf")
     df_raw = pd.read_csv(vcf_file, sep="\t", comment="#", low_memory=False)
     
-    # --- THE BIOLOGY FIX: Filter out junk DNA ---
+    # STRICT BIOLOGY FILTER: Rip out the introns and junk DNA
     if is_maf and 'Variant_Classification' in df_raw.columns:
-        # Keep ONLY mutations that change the protein structure
         df_clean = df_raw[df_raw['Variant_Classification'] == 'Missense_Mutation']
     else:
         df_clean = df_raw
         
     results = []
-    # Process top 5 VALID targets
     variants = df_clean.head(5) 
     
     if variants.empty:
-        st.error("No valid protein-altering mutations found in this sample.")
+        st.warning("No protein-altering Missense mutations found in the top rows.")
     else:
         progress = st.progress(0, "Analyzing Clinical Targets...")
-
         for i, row in variants.iterrows():
+            progress.progress((i+1)/5)
             if is_maf:
                 chrom = str(row.get('Chromosome', ''))
                 pos = str(row.get('Start_Position', ''))
@@ -71,7 +75,6 @@ if vcf_file:
             
             cons, gene, aa, p_pos = get_vep_annotation(chrom.replace('chr',''), pos, alt)
             score = predict_binding(hla, gene, aa)
-            
             results.append({"Target": gene, "Type": cons, "Change": f"{aa}@{p_pos}", "IC50": score})
 
         st.table(pd.DataFrame(results).sort_values("IC50"))
