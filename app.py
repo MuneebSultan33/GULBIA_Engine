@@ -19,6 +19,7 @@ def get_vep_annotation(chrom, pos, alt_allele):
 
 # 2. BINDING PREDICTOR (IEDB API)
 def predict_binding(allele, gene, change):
+    if change == 'N/A' or not change: return 9999.0
     mut_aa = change.split('/')[-1] if '/' in change else 'A'
     peptide = (f"{gene}{mut_aa}YLQCGE"[:9]).ljust(9, 'A')
     url = "http://tools-cluster-interface.iedb.org/tools_api/mhci/"
@@ -42,27 +43,35 @@ if vcf_file:
     is_maf = vcf_file.name.endswith(".maf")
     df_raw = pd.read_csv(vcf_file, sep="\t", comment="#", low_memory=False)
     
+    # --- THE BIOLOGY FIX: Filter out junk DNA ---
+    if is_maf and 'Variant_Classification' in df_raw.columns:
+        # Keep ONLY mutations that change the protein structure
+        df_clean = df_raw[df_raw['Variant_Classification'] == 'Missense_Mutation']
+    else:
+        df_clean = df_raw
+        
     results = []
-    # Process top 5 variants to keep the API from timing out during testing
-    variants = df_raw.head(5)
-    progress = st.progress(0, "Analyzing Clinical Targets...")
+    # Process top 5 VALID targets
+    variants = df_clean.head(5) 
+    
+    if variants.empty:
+        st.error("No valid protein-altering mutations found in this sample.")
+    else:
+        progress = st.progress(0, "Analyzing Clinical Targets...")
 
-    for i, row in variants.iterrows():
-        progress.progress((i+1)/5)
-        
-        # Dynamic Mapping: MAF vs VCF
-        if is_maf:
-            chrom = str(row.get('Chromosome', ''))
-            pos = str(row.get('Start_Position', ''))
-            alt = str(row.get('Tumor_Seq_Allele2', ''))
-        else:
-            chrom = str(row.iloc[0])
-            pos = str(row.iloc[1])
-            alt = str(row.iloc[4]).split(',')[0]
-        
-        cons, gene, aa, p_pos = get_vep_annotation(chrom.replace('chr',''), pos, alt)
-        score = predict_binding(hla, gene, aa)
-        
-        results.append({"Target": gene, "Type": cons, "Change": f"{aa}@{p_pos}", "IC50": score})
+        for i, row in variants.iterrows():
+            if is_maf:
+                chrom = str(row.get('Chromosome', ''))
+                pos = str(row.get('Start_Position', ''))
+                alt = str(row.get('Tumor_Seq_Allele2', ''))
+            else:
+                chrom = str(row.iloc[0])
+                pos = str(row.iloc[1])
+                alt = str(row.iloc[4]).split(',')[0]
+            
+            cons, gene, aa, p_pos = get_vep_annotation(chrom.replace('chr',''), pos, alt)
+            score = predict_binding(hla, gene, aa)
+            
+            results.append({"Target": gene, "Type": cons, "Change": f"{aa}@{p_pos}", "IC50": score})
 
-    st.table(pd.DataFrame(results))
+        st.table(pd.DataFrame(results).sort_values("IC50"))
