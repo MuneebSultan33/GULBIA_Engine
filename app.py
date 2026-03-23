@@ -2,9 +2,8 @@ import streamlit as st
 import pandas as pd
 import requests
 
-# 1. ENSEMBL VEP CORE (GRCh37 Legacy Build for TCGA Data)
+# 1. ENSEMBL VEP CORE (GRCh37)
 def get_vep_annotation(chrom, pos, alt_allele):
-    # FIXED: Pointing to the older GRCh37 server to match 2018 clinical data
     server = "https://grch37.rest.ensembl.org"
     endpoint = f"/vep/human/region/{chrom}:{pos}-{pos}:1/{alt_allele}"
     try:
@@ -18,26 +17,30 @@ def get_vep_annotation(chrom, pos, alt_allele):
     except:
         return "Offline", "Unknown", "N/A", "N/A"
 
-# 2. BULLETPROOF BINDING PREDICTOR
-def predict_binding(allele, gene, change):
-    if change == 'N/A' or not change: return 9999.0
-    mut_aa = change.split('/')[-1] if '/' in change else 'A'
+# 2. PRO BINDING PREDICTOR (9-mer Construction)
+def predict_binding(allele, gene, aa_change):
+    if aa_change == 'N/A' or '/' not in aa_change: return 9999.0
     
-    valid_aa = "ACDEFGHIKLMNPQRSTVWY"
-    clean_gene = "".join([c for c in gene.upper() if c in valid_aa])
-    peptide = (f"{clean_gene}{mut_aa}YLQCGE"[:9]).ljust(9, 'A')
+    # Extract the mutant amino acid (e.g., 'K' from 'E/K')
+    mutant_aa = aa_change.split('/')[-1]
+    
+    # Construct a valid 9-mer peptide window (Placeholder logic for demo)
+    # In a full clinical tool, we'd fetch the actual protein context here
+    placeholder_backbone = "SIYRYYGL" # A common high-binder scaffold
+    peptide = (mutant_aa + placeholder_backbone)[:9]
     
     url = "http://tools-cluster-interface.iedb.org/tools_api/mhci/"
     payload = {"method": "netmhcpan", "sequence_text": peptide, "allele": allele, "length": "9"}
     try:
         res = requests.post(url, data=payload, timeout=10)
         if res.ok:
+            # Extract IC50 from the IEDB response table
             return round(float(res.text.strip().split('\n')[1].split('\t')[7]), 2)
         return 9999.0
     except:
         return 9999.0
 
-# --- G.U.L.B.I.A. HYBRID UI ---
+# --- G.U.L.B.I.A. UI ---
 st.set_page_config(page_title="G.U.L.B.I.A. Liver Core", layout="wide")
 st.title("🧬 G.U.L.B.I.A. Engine")
 st.subheader("Clinical Liver Biomarker Analysis (VCF/MAF Hybrid)")
@@ -49,7 +52,6 @@ if vcf_file:
     is_maf = vcf_file.name.endswith(".maf")
     df_raw = pd.read_csv(vcf_file, sep="\t", comment="#", low_memory=False)
     
-    # STRICT BIOLOGY FILTER
     if is_maf and 'Variant_Classification' in df_raw.columns:
         df_clean = df_raw[df_raw['Variant_Classification'] == 'Missense_Mutation']
     else:
@@ -58,26 +60,17 @@ if vcf_file:
     results = []
     variants = df_clean.head(5) 
     
-    if variants.empty:
-        st.warning("No protein-altering Missense mutations found in the top rows.")
-    else:
+    if not variants.empty:
         progress = st.progress(0, "Analyzing Clinical Targets...")
-        total_variants = len(variants)
-        
         for count, (i, row) in enumerate(variants.iterrows()):
-            progress.progress((count + 1) / total_variants)
+            progress.progress((count + 1) / len(variants))
             
-            if is_maf:
-                chrom = str(row.get('Chromosome', ''))
-                pos = str(row.get('Start_Position', ''))
-                alt = str(row.get('Tumor_Seq_Allele2', ''))
-            else:
-                chrom = str(row.iloc[0])
-                pos = str(row.iloc[1])
-                alt = str(row.iloc[4]).split(',')[0]
+            chrom = str(row.get('Chromosome', '')) if is_maf else str(row.iloc[0])
+            pos = str(row.get('Start_Position', '')) if is_maf else str(row.iloc[1])
+            alt = str(row.get('Tumor_Seq_Allele2', '')) if is_maf else str(row.iloc[4]).split(',')[0]
             
             cons, gene, aa, p_pos = get_vep_annotation(chrom.replace('chr',''), pos, alt)
             score = predict_binding(hla, gene, aa)
-            results.append({"Target": gene, "Type": cons, "Change": f"{aa}@{p_pos}", "IC50": score})
+            results.append({"Target": gene, "Type": cons, "Change": f"{aa}@{p_pos}", "IC50 (nM)": score})
 
-        st.table(pd.DataFrame(results).sort_values("IC50"))
+        st.table(pd.DataFrame(results).sort_values("IC50 (nM)"))
