@@ -1,0 +1,153 @@
+/* --- GULBIA MASTER VISUALS - v1.1.5 --- */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap');
+
+body { margin: 0; background-color: #000; color: #fff; scroll-behavior: smooth; }
+
+/* Font definitions */
+.Inter-Font { font-family: 'Inter', sans-serif; }
+.Ahsing-Font { font-family: 'Playfair Display', serif !important; font-weight: 900; }
+.Clinical-Serif { font-family: 'Playfair Display', serif; }
+.Instrument-Font { font-family: 'Instrument Sans', sans-serif !important; }
+
+/* Global Red Accent Colors */
+:root { --primary-red: #ff4d4d; --dark-red-border: #330c0c; }
+
+.Fade-In { animation: fadeIn 0.8s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Master Clinical Navigation */
+.Top-Nav { display: flex; justify-content: space-between; align-items: center; padding: 2vh 8vw; background-color: #000; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--dark-red-border); }
+.Nav-Logo { font-size: 2.5rem; color: #fff; cursor: pointer; }
+.Nav-Links { display: flex; gap: 30px; }
+.Nav-Links span { font-size: 0.9rem; color: #ccc; cursor: pointer; text-transform: uppercase; font-weight: 500; transition: color 0.3s; }
+.Nav-Links span:hover { color: var(--primary-red); }
+.Nav-Links span.Active-Link { color: var(--primary-red); font-weight: 700; border-bottom: 2px solid var(--primary-red); }
+
+.Canva-Btn { background-color: var(--primary-red); color: white; border: none; padding: 15px 35px; border-radius: 5px; cursor: pointer; font-size: 1.1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+
+/* --- LANDING PAGE --- */
+:root { --dusty-pink: #df9e9e; --pill-red: #ba5d5d; --pill-text: #2b1313; --dark-bg: #050505; --footer-red: #a13d3d; }
+
+.Hero-Section { display: flex; align-items: center; justify-content: flex-start; height: 90vh; position: relative; background: #000; overflow: hidden; padding-left: 8vw; }
+.Hero-BG { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.6; z-index: 1; }
+.Hero-Text-Container { z-index: 2; display: flex; flex-direction: column; align-items: flex-start; }
+.Huge-Title { font-size: 12vw; font-weight: 900; color: white; margin: 0; letter-spacing: -2px; line-height: 0.9; text-align: left; }
+.Hero-Subtitle { font-size: 1.5rem; color: #fff; margin-top: 15px; font-weight: 300; letter-spacing: 1px; max-width: 700px; text-align: left; margin-left: 5px; }
+.Hero-Btn-Container { position: absolute; right: 8vw; bottom: 15vh; z-index: 3; }
+.Hero-Btn { background-color: #2b0000; color: white; border: 1px solid #ff4d4d; border-radius: 30px; padding: 12px 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.3s; }
+.Hero-Btn:hover { background-color: #ff4d4d; color: #000; }
+
+.Design-Section-Light { background-color: var(--dusty-pink); color: #000; padding: 100px 8vw; overflow: hidden; }
+.Design-Section-Dark { background-color: var(--dark-bg); color: #fff; padding: 100px 8vw; }
+.Section-Container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; }
+.Pill-Header { background-color: var(--pill-red); color: var(--pill-text); padding: 30px 60px 30px 8vw; display: inline-block; margin-left: -8vw; border-radius: 0 50px 50px 0; margin-bottom: 40px; }
+.Pill-Header h2 { font-size: 3rem; margin: 0; font-family: 'Playfair Display', serif; line-height: 1.1; }
+.Dark-Section-Header h2 { font-size: 3rem; margin: 0 0 40px 0; font-family: 'Playfair Display', serif; color: var(--dusty-pink); line-height: 1.1; }
+.Text-Content p { max-width: 600px; font-size: 1.05rem; line-height: 1.6; }
+
+.Design-Footer { background-color: var(--footer-red); padding: 80px 8vw; }
+.Footer-Divider { height: 2px; background-color: #000; max-width: 800px; margin: 0 auto 60px auto; }
+.Footer-Grid { display: flex; justify-content: space-between; max-width: 800px; margin: 0 auto; align-items: center; }
+.Footer-Logo-Box { background-color: #000; width: 100px; height: 100px; display: flex; justify-content: center; align-items: center; border-radius: 5px; }
+.Footer-Logo-Box span { color: var(--dusty-pink); font-size: 4rem; font-family: 'Playfair Display', serif; margin-top: -10px;}
+.Footer-Info { text-align: left; }
+.Footer-Info h4 { margin: 0 0 10px 0; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: #000; font-weight: 900;}
+.Footer-Info p { margin: 0; font-size: 0.9rem; line-height: 1.4; color: #000;}
+
+/* --- CLINICAL WORKSPACE (ENTERPRISE DASHBOARD) --- */
+.Dashboard { display: flex; height: calc(100vh - 80px); background-color: #000; color: #fff; overflow: hidden; }
+.Sidebar { width: 320px; background-color: #080808; padding: 40px 30px; display: flex; flex-direction: column; border-right: 1px solid #1f1f1f; z-index: 10; }
+.Sidebar-Header { margin-bottom: 20px; }
+.Sidebar h2 { color: var(--primary-red); margin: 0 0 10px 0; font-size: 1.8rem; letter-spacing: -1px; }
+
+.Status-Indicator { display: flex; align-items: center; color: #888; font-size: 0.8rem; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; }
+.Pulse-Dot { display: inline-block; width: 8px; height: 8px; background-color: #00ff00; border-radius: 50%; margin-right: 10px; box-shadow: 0 0 8px #00ff00; animation: pulse 2s infinite; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+.Divider { height: 1px; background-color: #1f1f1f; margin: 30px 0; }
+
+.Meta-Box label, .Param-Box label { display: block; color: #666; font-size: 0.75rem; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.Meta-Box .Val { color: #e0e0e0; font-size: 1.1rem; margin-bottom: 20px; }
+.Val.mono { font-family: monospace; color: #fff; background: #111; padding: 5px 10px; border-radius: 3px; border: 1px solid #222; display: inline-block;}
+
+.Param-Box select { width: 100%; background: #111; color: #fff; border: 1px solid #333; padding: 12px; font-family: inherit; font-size: 0.9rem; border-radius: 3px; outline: none; cursor: pointer; transition: 0.3s; }
+.Param-Box select:hover { border-color: var(--primary-red); }
+
+.Exit-Btn { background: transparent; color: #888; border: 1px solid #333; padding: 15px; cursor: pointer; margin-top: auto; font-family: inherit; width: 100%; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; border-radius: 3px; transition: 0.3s; }
+.Exit-Btn:hover { border-color: var(--primary-red); color: var(--primary-red); background: rgba(255, 77, 77, 0.05); }
+
+.Workspace { flex: 1; padding: 50px 6vw; display: flex; flex-direction: column; gap: 30px; overflow-y: auto; background: radial-gradient(circle at top right, #0a0000 0%, #000000 100%); }
+.W-Header h1 { margin: 0; font-size: 3rem; color: #fff; letter-spacing: -1px; }
+
+/* THE NEW CUSTOM UPLOAD DROPZONE */
+.Upload-Dropzone { border: 1px dashed #444; background: rgba(255, 255, 255, 0.02); padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px; transition: 0.3s; gap: 20px;}
+.Upload-Dropzone:hover, .Upload-Dropzone:focus-within { border-color: var(--primary-red); background: rgba(255, 77, 77, 0.05); }
+
+.Custom-File-Upload { flex: 1; cursor: pointer; display: flex; align-items: center; }
+.File-Name-Display { color: var(--primary-red); font-family: monospace; font-size: 1rem; border: 1px solid #333; padding: 12px 20px; border-radius: 3px; background: #111; width: 100%; max-width: 500px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; transition: 0.3s; font-weight: bold;}
+.Custom-File-Upload:hover .File-Name-Display { border-color: var(--primary-red); color: #fff;}
+
+.Run-Btn { background-color: var(--primary-red); color: #000; border: none; padding: 15px 30px; cursor: pointer; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; border-radius: 3px; font-size: 0.9rem; transition: 0.3s; min-width: 250px;}
+.Run-Btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3); }
+.Run-Btn:disabled { background-color: #555; cursor: not-allowed; transform: none; box-shadow: none; color: #888;}
+
+/* Blueprint Terminal Box */
+.Vaccine-Blueprint-Box { background-color: #050505; border: 1px solid var(--primary-red); padding: 40px; border-radius: 5px; display: flex; flex-direction: column; gap: 15px; position: relative; overflow: hidden; }
+.Vaccine-Blueprint-Box::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background-color: var(--primary-red); }
+.Blueprint-Title { font-size: 2rem; color: #fff; margin: 0; letter-spacing: -1px; }
+.Blueprint-Subtitle { font-size: 0.8rem; color: var(--primary-red); text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-bottom: 10px; }
+.Final-Sequence-Display { background-color: #000; padding: 25px; font-family: monospace; font-size: 1.1rem; color: #00ff00; border: 1px solid #111; word-break: break-all; line-height: 1.6; border-radius: 3px; box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.05); }
+
+/* Floating Card Data Table */
+.Clinical-Table { width: 100%; border-collapse: separate; border-spacing: 0 8px; margin-top: 10px; font-family: 'Inter', sans-serif; }
+.Clinical-Table th { text-align: left; padding: 10px 25px; color: #666; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
+.Clinical-Table td { padding: 18px 25px; background-color: #0d0d0d; color: #e0e0e0; font-size: 0.95rem; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; transition: 0.2s; }
+.Clinical-Table tr:hover td { background-color: #111; border-color: #333; }
+.Clinical-Table tr td:first-child { border-left: 1px solid #1a1a1a; border-top-left-radius: 5px; border-bottom-left-radius: 5px; font-weight: 600; }
+.Clinical-Table tr td:last-child { border-right: 1px solid #1a1a1a; border-top-right-radius: 5px; border-bottom-right-radius: 5px; }
+.Clinical-Table td.mono { font-family: monospace; color: #ff8e8e; letter-spacing: 1px; }
+.clinical-serif.Green { color: #00ff00 !important; font-weight: bold; text-shadow: 0 0 8px rgba(0,255,0,0.4); }
+
+/* --- OTHER PAGES (Methodology, API, Contact, Profile) --- */
+.Meth-Container { display: flex; flex-direction: column; width: 100%; min-height: 100vh; background-color: #000; }
+.Meth-Hero { background: radial-gradient(circle at right center, #8a1a20 0%, #1a0204 100%); padding: 120px 8vw; position: relative; border-bottom: 1px solid var(--dark-red-border); }
+.Meth-Hero-Text { font-size: 5vw; font-weight: 900; color: #fff; line-height: 0.95; margin: 0; letter-spacing: -2px; }
+.Meth-Block { padding: 100px 8vw; display: flex; flex-direction: column; justify-content: center; }
+.Meth-Block h2 { font-size: 3.5rem; font-weight: 900; margin: 0 0 25px 0; letter-spacing: -1px; line-height: 1.1; }
+.Meth-Block p { font-size: 1.1rem; line-height: 1.6; max-width: 650px; margin: 0; }
+.Meth-Red { background-color: #6b2024; } .Meth-Red h2 { color: #e5a8a8; } .Meth-Red p { color: #fff; font-size: 0.95rem; }
+.Meth-Dark { background-color: #363636; } .Meth-Dark h2 { color: #fff; } .Meth-Dark p { color: #ccc; font-size: 0.95rem;}
+.Meth-Pink { background-color: #e69c9c; } .Meth-Pink h2 { color: #2b0508; } .Meth-Pink p { color: #2b0508; font-size: 0.95rem; font-weight: 500;}
+.Align-Right-Text { align-self: center; margin-left: 20%; margin-top: 30px !important; font-size: 0.9rem !important; max-width: 500px !important; }
+
+.Doc-Container { display: flex; flex-direction: column; width: 100%; min-height: 100vh; background-color: #000; }
+.Doc-Hero { display: flex; align-items: center; justify-content: flex-start; padding: 120px 8vw; background-color: #000; position: relative; overflow: hidden; }
+.Doc-Hero-Text { z-index: 2; max-width: 650px; } .Doc-Hero-Text h1 { font-size: 5vw; font-weight: 900; color: #fff; line-height: 0.95; margin: 0 0 15px 0; letter-spacing: -2px; } .Doc-Hero-Text p { font-size: 1.1rem; color: #ccc; line-height: 1.6; font-style: italic; margin: 0; }
+.Doc-Hero-Image { position: absolute; right: 5vw; top: -50px; height: 120%; opacity: 0.8; z-index: 1; }
+.Doc-Block { padding: 100px 8vw; display: flex; flex-direction: column; justify-content: center; }
+.Doc-Green { background-color: #1a4a2b; } .Doc-Green h2 { font-size: 4rem; font-weight: 900; color: #a4e5af; margin: 0 0 25px 0; letter-spacing: -1px; line-height: 1.1; } .Doc-Green p { font-size: 1.1rem; line-height: 1.6; color: #a4e5af; max-width: 650px; margin: 0; }
+.Doc-Dark { background-color: #151a15; } .Doc-Dark h2 { font-size: 4rem; font-weight: 900; color: #d0d0d0; margin: 0 0 40px 0; letter-spacing: -1px; line-height: 1.1; }
+.Doc-List { display: flex; flex-direction: column; gap: 20px; } .Doc-List-Item { display: flex; gap: 15px; align-items: flex-start; } .Doc-List-Num { font-size: 1.1rem; color: #a4e5af; font-family: monospace; padding-top: 2px;} .Doc-List-Text { font-size: 1rem; color: #ccc; line-height: 1.6; max-width: 550px; margin: 0; }
+.Offset-Right-Doc { align-self: center; margin-left: 20%; max-width: 450px !important; }
+
+.Contact-Container { display: flex; flex-direction: column; width: 100%; min-height: 100vh; background-color: #000; }
+.Contact-Hero { display: flex; align-items: center; justify-content: flex-start; padding: 150px 8vw; background-color: #111; background-size: cover; background-position: center; position: relative; }
+.Contact-Hero-Overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 1; }
+.Contact-Hero-Text { font-size: 6vw; font-weight: 900; color: #fff; line-height: 0.95; margin: 0; letter-spacing: -3px; z-index: 2; }
+.Contact-Middle-Block { background-color: #1c1c1e; padding: 120px 8vw; display: flex; justify-content: flex-start; }
+.Contact-Middle-Text { font-size: 1.8rem; font-weight: 600; font-style: italic; color: #d0d0d0; max-width: 900px; line-height: 1.4; margin: 0; }
+.Contact-Bottom-Block { background-color: #000; padding: 100px 8vw; }
+.Contact-Divider-Line { height: 2px; background-color: #fff; width: 100%; max-width: 1000px; margin: 0 auto 80px auto; }
+.Contact-Details-Grid { display: flex; justify-content: space-between; align-items: flex-start; max-width: 1000px; margin: 0 auto; }
+.Contact-Details-Title { font-size: 2.5rem; font-weight: 800; color: #fff; margin: 0; width: 40%; }
+.Contact-List-Container { width: 55%; } .Contact-List { list-style-type: disc; padding-left: 20px; margin: 0; } .Contact-List li { color: #ccc; font-size: 0.95rem; line-height: 1.8; margin-bottom: 5px; } .Contact-List a { color: #ccc; text-decoration: underline; } .Contact-List a:hover { color: var(--primary-red); }
+
+.Profile-Container { display: flex; flex-direction: column; width: 100%; min-height: 100vh; background-color: #fff; }
+.Profile-Hero { display: flex; justify-content: space-between; align-items: center; padding: 120px 8vw; background-color: #000; background-size: cover; background-position: center; position: relative; overflow: hidden; }
+.Profile-Hero-Overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1; }
+.Profile-Hero-Text { z-index: 2; font-size: 5vw; font-weight: 900; color: #fff; line-height: 1; margin: 0; letter-spacing: -2px; max-width: 600px; }
+.Profile-Image-Wrapper { z-index: 2; width: 280px; height: 320px; } .Profile-Image-Wrapper img { width: 100%; height: 100%; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.Profile-Bio-Block { background-color: #16384c; padding: 100px 8vw; display: flex; flex-direction: column; }
+.Profile-Bio-Block h2 { font-size: 5rem; font-weight: 900; color: #85a8b8; margin: 0 0 30px 0; letter-spacing: -2px; line-height: 1; } .Profile-Bio-Block p { font-size: 1.1rem; line-height: 1.6; color: #e0e0e0; max-width: 900px; margin: 0 0 20px 0; }
+.Profile-Comp-Block { background-color: #ffffff; padding: 100px 8vw; display: flex; flex-direction: column; }
+.Profile-Comp-Block h2 { font-size: 5rem; font-weight: 900; color: #16384c; margin: 0 0 40px 0; letter-spacing: -2px; line-height: 1; } .Profile-Comp-List { list-style-type: disc; padding-left: 20px; margin: 0; max-width: 900px; } .Profile-Comp-List li { color: #000; font-size: 1.05rem; line-height: 1.6; margin-bottom: 10px; }

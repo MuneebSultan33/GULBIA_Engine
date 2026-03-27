@@ -1,0 +1,10 @@
+# Python Virtual Environment
+gulbia_env/
+__pycache__/
+
+# React Frontend
+gulbia-web/node_modules/
+gulbia-web/build/
+
+# OS Files
+.DS_Store
