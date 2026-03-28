@@ -61,7 +61,8 @@ function App() {
       setVaccineData(data.vaccine_construct); 
       
     } catch (error) {
-      alert("SYSTEM OFFLINE: Make sure your Python (Uvicorn) backend server is running.");
+      // *** THE FIX: Cloud Cold Start Protocol ***
+      alert("SERVER WAKING UP: The cloud engine is performing a cold start. Please wait 30 seconds and click Execute Protocol again.");
     } finally {
       setIsLoading(false);
     }
@@ -194,7 +195,6 @@ function App() {
           </button>
         </div>
 
-        {/* BRUTE-FORCE RENDERING: It is physically impossible for CSS to hide this now */}
         {vaccineData && vaccineData.full_sequence ? (
           <div className="Vaccine-Blueprint-Box Fade-In" style={{ minHeight: '200px', display: 'block', overflow: 'visible' }}>
             <h2 className="Blueprint-Title Instrument-Font" style={{marginBottom: '10px'}}>Vaccine Construct Blueprint</h2>
