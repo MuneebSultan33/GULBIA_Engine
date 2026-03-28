@@ -50,7 +50,8 @@ function App() {
     formData.append("batch_size", 50000); 
 
     try {
-      const response = await fetch("http://localhost:8000/analyze/", { 
+      // *** THE SPLICE: Connected to live Hugging Face Backend ***
+      const response = await fetch("https://muneeeb333-gulbia-api.hf.space/analyze/", { 
         method: "POST", 
         body: formData 
       });
@@ -240,18 +241,6 @@ function App() {
           </div>
         )}
       </main>
-    </div>
-  );
-
-  return (
-    <div className="App Inter-Font">
-      <TopNav />
-      {activePage === 'Workspace' && <WorkspacePage />}
-      {activePage === 'Methodology' && <Methodology />}
-      {activePage === 'Documentation' && <Documentation />}
-      {activePage === 'Profile' && <UserProfile />}
-      {activePage === 'Contact' && <Contact />}
-      {activePage === 'Home' && <LandingPage />}
     </div>
   );
 }
