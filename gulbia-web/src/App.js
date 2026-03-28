@@ -245,4 +245,17 @@ function App() {
   );
 }
 
+return (
+    <div className="App Inter-Font">
+      <TopNav />
+      {activePage === 'Workspace' && <WorkspacePage />}
+      {activePage === 'Methodology' && <Methodology />}
+      {activePage === 'Documentation' && <Documentation />}
+      {activePage === 'Profile' && <UserProfile />}
+      {activePage === 'Contact' && <Contact />}
+      {activePage === 'Home' && <LandingPage />}
+    </div>
+  );
+}
+
 export default App;
