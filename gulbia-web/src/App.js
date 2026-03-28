@@ -50,7 +50,6 @@ function App() {
     formData.append("batch_size", 50000); 
 
     try {
-      // *** THE SPLICE: Connected to live Hugging Face Backend ***
       const response = await fetch("https://muneeeb333-gulbia-api.hf.space/analyze/", { 
         method: "POST", 
         body: formData 
@@ -61,7 +60,6 @@ function App() {
       setVaccineData(data.vaccine_construct); 
       
     } catch (error) {
-      // *** THE FIX: Cloud Cold Start Protocol ***
       alert("SERVER WAKING UP: The cloud engine is performing a cold start. Please wait 30 seconds and click Execute Protocol again.");
     } finally {
       setIsLoading(false);
@@ -243,9 +241,8 @@ function App() {
       </main>
     </div>
   );
-}
 
-return (
+  return (
     <div className="App Inter-Font">
       <TopNav />
       {activePage === 'Workspace' && <WorkspacePage />}
